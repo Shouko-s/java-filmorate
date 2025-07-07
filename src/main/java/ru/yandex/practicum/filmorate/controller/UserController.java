@@ -35,10 +35,16 @@ public class UserController {
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        if (user.getId() == null || !users.containsKey(user.getId())) {
-            log.warn("Пользователь с id айди не найден");
+        if (user.getId() == null) {
+            log.warn("id пользователя не передан в запросе");
+            throw new ValidationException("id пользователя должен быть указан");
+        }
+
+        if (!users.containsKey(user.getId())) {
+            log.warn("Пользователь с id - " + user.getId() + " не найден");
             throw new ValidationException("Пользователь с таким id не найден");
         }
+
         users.put(user.getId(), user);
         log.info("Пользователь с id - " + user.getId() + " обновлен");
         return user;
@@ -47,6 +53,7 @@ public class UserController {
     private void postProcessName(User user) {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
+            log.info("Имя не передано, вместо имени установлен логин");
         }
     }
 
