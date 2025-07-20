@@ -22,13 +22,8 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void getUserById(long id) {
-        if (!users.containsKey(id)) {
-            log.warn("Пользователь с id - {} не найден", id);
-            throw new NotFoundException("Пользователь с таким id не найден");
-        }
-
-        users.get(id);
+    public Optional<User> getUserById(long id) {
+        return Optional.ofNullable(users.get(id));
     }
 
     @Override
@@ -102,10 +97,7 @@ public class InMemoryUserStorage implements UserStorage {
             log.warn("Пользователь с id - {} не найден (друг)", friendId);
             throw new NotFoundException("Пользователь с id - " + friendId + " не найден");
         }
-//        if(!friends.get(id).contains(friendId)) {
-//            log.warn("Пользователь с id - {} не является другом", friendId);
-//            throw new NotFoundException("Этот пользователь вам не друг");
-//        }
+
         friends.get(id).remove(friendId);
         friends.get(friendId).remove(id);
         return users.get(friendId);
@@ -113,8 +105,9 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public Set<User> findCommonFriends(long id, long otherId) {
+        Set<Long> otherFriends = friends.get(otherId);
         return friends.get(id).stream()
-                .filter(friends.get(otherId)::contains)   // оставляем только тех, кто есть во втором множестве
+                .filter(otherFriends::contains)   // оставляем только тех, кто есть во втором множестве
                 .map(users::get)                   // достаём объект User по ID
                 .collect(Collectors.toSet());
     }

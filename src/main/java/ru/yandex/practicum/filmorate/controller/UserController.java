@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -18,6 +19,11 @@ public class UserController {
     @GetMapping
     public Collection<User> findAllUsers() {
         return userService.findAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    public Optional<User> getFilmById(@PathVariable long id) {
+        return userService.getUserById(id);
     }
 
     @PostMapping

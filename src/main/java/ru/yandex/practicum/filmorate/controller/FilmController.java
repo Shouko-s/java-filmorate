@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -21,13 +22,15 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public Collection<Film> findPopularFilms(@RequestParam(name = "count", defaultValue = "10s") long count) {
+    public Collection<Film> findPopularFilms(
+            @RequestParam(name = "count", defaultValue = "10")
+            @Positive(message = "Параметр count должен быть положительным") long count) {
         return filmService.findPopularFilms(count);
     }
 
     @GetMapping("/{id}")
     public Film getFilmById(@PathVariable long id) {
-        return filmService.findFilmById(id);
+        return filmService.getFilmById(id);
     }
 
     @PostMapping
