@@ -11,6 +11,8 @@ public interface UserService {
 
     Collection<User> findAllUsers();
 
+    User getUserById(long id);
+
     User createUser(User user);
 
     User updateUser(User user);

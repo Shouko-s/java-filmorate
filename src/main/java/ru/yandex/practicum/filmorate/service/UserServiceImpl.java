@@ -21,6 +21,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserById(long id) {
+        return getUserByIdOrThrow(id);
+    }
+
+    @Override
     public User createUser(User user) {
         return userStorage.createUser(user);
     }

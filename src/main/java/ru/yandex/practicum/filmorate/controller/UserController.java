@@ -20,6 +20,11 @@ public class UserController {
         return userService.findAllUsers();
     }
 
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable long id) {
+        return userService.getUserById(id);
+    }
+
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
         return userService.createUser(user);

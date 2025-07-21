@@ -8,6 +8,8 @@ public interface FilmService {
 
     Collection<Film> findAllFilms();
 
+    Film getFilmById(long id);
+
     Collection<Film> findPopularFilms(long count);
 
     Film createFilm(Film film);

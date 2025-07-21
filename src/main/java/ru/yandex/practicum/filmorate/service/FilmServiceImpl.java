@@ -22,6 +22,11 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
+    public Film getFilmById(long id) {
+        return getFilmByIdOrThrow(id);
+    }
+
+    @Override
     public Collection<Film> findPopularFilms(long count) {
         return filmStorage.findPopularFilms(count);
     }
