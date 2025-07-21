@@ -2,8 +2,6 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
@@ -38,16 +36,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User updateUser(User user) {
-        if (user.getId() == null) {
-            log.warn("id пользователя не передан в запросе");
-            throw new ValidationException("id пользователя должен быть указан");
-        }
-
-        if (!users.containsKey(user.getId())) {
-            log.warn("Пользователь с id - {} не найден", user.getId());
-            throw new NotFoundException("Пользователь с таким id не найден");
-        }
-
         users.put(user.getId(), user);
         log.info("Пользователь с id - {} обновлен", user.getId());
         return user;
@@ -55,20 +43,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public Set<Long> addFriend(long id, long friendId) {
-        if (!users.containsKey(id)) {
-            log.warn("Пользователь с id - {} не найден", id);
-            throw new NotFoundException("Пользователь с id - " + id + " не найден");
-        }
-        if (!users.containsKey(friendId)) {
-            log.warn("Пользователь с id - {} не найден (друг)", friendId);
-            throw new NotFoundException("Пользователь с id - " + friendId + " не найден");
-        }
-
-        if (friends.get(id).contains(friendId)) {
-            log.warn("Пользователь с id - {} уже в друзьях", friendId);
-            throw new RuntimeException("Пользователь с id - " + friendId + " уже в друзьях");
-        }
-
         friends.get(id).add(friendId);
         friends.get(friendId).add(id);
         log.info("Пользователь с id - {} был добавлен в друзья", friendId);
