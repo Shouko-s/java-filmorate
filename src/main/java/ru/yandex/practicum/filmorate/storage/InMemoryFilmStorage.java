@@ -2,8 +2,6 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
@@ -50,14 +48,6 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film updateFilm(Film film) {
-        if (film.getId() == null) {
-            log.warn("id фильма не передан");
-            throw new ValidationException("id фильма должен быть указан");
-        }
-        if (!films.containsKey(film.getId())) {
-            log.warn("Фильм с id={} не найден", film.getId());
-            throw new NotFoundException("Фильм с таким id не найден");
-        }
         films.put(film.getId(), film);
         log.info("Фильм с id={} обновлён", film.getId());
         return film;
@@ -65,22 +55,12 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void putLike(long filmId, long userId) {
-        if (!films.containsKey(filmId)) {
-            log.warn("Фильм с id={} не был найден", filmId);
-            throw new NotFoundException("Фильм с id=" + filmId + " не был найден");
-        }
-
         log.info("Лайк поставлен пользователем с id={}", userId);
         likes.get(filmId).add(userId);
     }
 
     @Override
     public void removeLike(long filmId, long userId) {
-        if (!films.containsKey(filmId)) {
-            log.warn("Фильм с id={} не был найден", filmId);
-            throw new NotFoundException("Фильм с id=" + filmId + " не был найден");
-        }
-
         log.info("Пользователь с id={} убрал лайк", userId);
         likes.get(filmId).remove(userId);
     }

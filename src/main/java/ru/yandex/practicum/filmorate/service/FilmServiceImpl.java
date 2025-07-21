@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -30,35 +31,39 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public Film getFilmById(long id) {
-        return filmStorage.getFilmById(id)
-                .orElseThrow(
-                        () -> new NotFoundException("Фильм с id=" + id + " не найден"));
-    }
-
-    @Override
     public Film createFilm(Film film) {
         return filmStorage.createFilm(film);
     }
 
     @Override
     public Film updateFilm(Film film) {
-        getFilmById(film.getId());
+        getFilmByIdOrThrow(film.getId());
         return filmStorage.updateFilm(film);
     }
 
     @Override
     public void putLike(long filmId, long userId) {
-        getFilmById(filmId);
-        userStorage.getUserById(userId).orElseThrow(() -> new NotFoundException("Пользователь с id=" + userId + " не найден"));
+        getFilmByIdOrThrow(filmId);
+        getUserByIdOrThrow(userId);
         filmStorage.putLike(filmId, userId);
     }
 
     @Override
     public void removeLike(long filmId, long userId) {
-        getFilmById(filmId);
-        userStorage.getUserById(userId)
-                .orElseThrow(() -> new NotFoundException("Пользователь с id=" + userId + " не найден"));
+        getFilmByIdOrThrow(filmId);
+        getUserByIdOrThrow(userId);
         filmStorage.removeLike(filmId, userId);
+    }
+
+    private Film getFilmByIdOrThrow(long id) {
+        return filmStorage.getFilmById(id)
+                .orElseThrow(
+                        () -> new NotFoundException("Фильм с id=" + id + " не найден"));
+    }
+
+    private User getUserByIdOrThrow(long id) {
+        return userStorage.getUserById(id)
+                .orElseThrow(
+                        () -> new NotFoundException("Пользователь с id=" + id + " не найден"));
     }
 }

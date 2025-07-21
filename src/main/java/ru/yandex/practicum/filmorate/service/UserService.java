@@ -4,15 +4,12 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
 public interface UserService {
 
     Collection<User> findAllUsers();
-
-    Optional<User> getUserById(long id);
 
     User createUser(User user);
 

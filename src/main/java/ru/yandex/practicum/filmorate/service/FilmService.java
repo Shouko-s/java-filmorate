@@ -10,8 +10,6 @@ public interface FilmService {
 
     Collection<Film> findPopularFilms(long count);
 
-    Film getFilmById(long id);
-
     Film createFilm(Film film);
 
     Film updateFilm(Film film);

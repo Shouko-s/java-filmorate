@@ -77,10 +77,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public Set<User> findMyFriends(long id) {
-        if (users.get(id) == null) {
-            log.warn("Пользователь с id - {} не найден", id);
-            throw new NotFoundException("Пользователь с id - " + id + " не найден");
-        }
         log.info("Получен список друзей");
         return friends.get(id).stream()
                 .map(users::get)
@@ -89,15 +85,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User deleteFriend(long id, long friendId) {
-        if (!users.containsKey(id)) {
-            log.warn("Пользователь с id - {} не найден", id);
-            throw new NotFoundException("Пользователь с id - " + id + " не найден");
-        }
-        if (!users.containsKey(friendId)) {
-            log.warn("Пользователь с id - {} не найден (друг)", friendId);
-            throw new NotFoundException("Пользователь с id - " + friendId + " не найден");
-        }
-
         friends.get(id).remove(friendId);
         friends.get(friendId).remove(id);
         return users.get(friendId);
