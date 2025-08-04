@@ -5,7 +5,7 @@ Template repository for Filmorate project.
 
 [Посмотреть ER-диаграмму в dbdiagram.io](https://dbdiagram.io/d/688b1365cca18e685c98afa9)
 
-![ER Diagram](assets/diagram.png)
+![ER Diagram](src/assets/diagram.png)
 
 ### Описание схемы Filmorate
 
