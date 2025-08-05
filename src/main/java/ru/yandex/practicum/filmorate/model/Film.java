@@ -5,6 +5,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
+import java.util.EnumSet;
 
 /**
  * Film.
@@ -25,9 +26,17 @@ public class Film {
     @Positive(message = "Длительность фильма должна быть положительной")
     private int duration;
 
+    @NotNull(message = "Жанры фильма обязательны")
+    private EnumSet<Genre> genres;
+
+    @NotNull(message = "Рейтинг фильма обязателен")
+    private Rating rating;
+
     @AssertTrue(message = "Дата релиза - не раньше 28 декабря 1895 года")
     private boolean isReleaseDateValid() {
         return releaseDate == null
                 || !releaseDate.isBefore(LocalDate.of(1895, 12, 28));
     }
+
+
 }

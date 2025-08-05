@@ -22,4 +22,7 @@ public class User {
     @PastOrPresent(message = "Дата рождения не может быть в будущем")
     @NotNull(message = "Дата рождения не может быть пустой")
     private LocalDate birthday;
+
+    private FriendshipStatus status;
+
 }
