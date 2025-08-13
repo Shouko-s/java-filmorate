@@ -108,4 +108,9 @@ public class UserDbStorage implements UserStorage {
                 "WHERE f1.user_id = ? AND f2.user_id = ?";
         return new HashSet<>(jdbc.query(sql, userRowMapper, id, otherId));
     }
+
+//    Извините, не успел закончить ФЗ.
+//    Работу отправил на проверку до дедлайна.
+//    Насколько знаю, в таком случае можно дорабатывать и пересдавать после дедлайна,
+//    пока не сдам. Днём доделаю и пришлю полную версию.
 }
