@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.AlreadyFriendException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -10,10 +11,13 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import java.util.Collection;
 import java.util.Set;
 
-@AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
+
+    public UserServiceImpl(@Qualifier("userDbStorage") UserStorage userStorage) {
+        this.userStorage = userStorage;
+    }
 
     @Override
     public Collection<User> findAllUsers() {
