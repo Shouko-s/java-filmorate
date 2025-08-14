@@ -1,0 +1,33 @@
+package ru.yandex.practicum.filmorate.storage.dal;
+
+import lombok.AllArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.storage.dal.mappers.MpaRowMapper;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+@AllArgsConstructor
+public class MpaDbStorage {
+    private final JdbcTemplate jdbc;
+    private final MpaRowMapper mpaRowMapper;
+
+    public List<Mpa> findAll() {
+        String query = "SELECT * FROM mpa_ratings ORDER BY id";
+        return jdbc.query(query, mpaRowMapper);
+    }
+
+    public Optional<Mpa> findById(int id) {
+        String sql = "SELECT id, name FROM mpa_ratings WHERE id = ?";
+        try {
+            Mpa m = jdbc.queryForObject(sql, mpaRowMapper, id);
+            return Optional.ofNullable(m);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+}

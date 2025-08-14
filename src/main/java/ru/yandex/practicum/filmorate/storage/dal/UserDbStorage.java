@@ -1,13 +1,14 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.dal;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.mappers.UserRowMapper;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.dal.mappers.UserRowMapper;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -16,7 +17,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-@Component
+@Repository
 @Qualifier("userDbStorage")
 @AllArgsConstructor
 public class UserDbStorage implements UserStorage {
@@ -25,13 +26,13 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public Collection<User> findAllUsers() {
-        String sql = "SELECT id, email, login, name, birthday FROM users";
+        String sql = "SELECT * FROM users";
         return jdbc.query(sql, userRowMapper);
     }
 
     @Override
     public Optional<User> getUserById(long id) {
-        String sql = "SELECT id, email, login, name, birthday FROM users WHERE id = ?";
+        String sql = "SELECT * FROM users WHERE id = ?";
         try {
             User user = jdbc.queryForObject(sql, userRowMapper, id);
             return Optional.ofNullable(user);

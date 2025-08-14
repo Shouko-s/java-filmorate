@@ -16,7 +16,7 @@ public class FilmServiceImpl implements FilmService {
     private final UserStorage userStorage;
 
     public FilmServiceImpl(
-            FilmStorage filmStorage,
+            @Qualifier("filmDbStorage") FilmStorage filmStorage,
             @Qualifier("userDbStorage") UserStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
