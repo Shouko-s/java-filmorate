@@ -16,14 +16,14 @@ public class MpaDbStorage implements MpaStorage {
     private final MpaRowMapper mpaRowMapper;
 
     public List<Mpa> findAll() {
-        String query = "SELECT * FROM mpa_ratings ORDER BY id";
-        return jdbc.query(query, mpaRowMapper);
+        String sql = "SELECT * FROM mpa_ratings ORDER BY id";
+        return jdbc.query(sql, mpaRowMapper);
     }
 
     public Optional<Mpa> findById(int id) {
-        String query = "SELECT id, name FROM mpa_ratings WHERE id = ?";
+        String sql = "SELECT id, name FROM mpa_ratings WHERE id = ?";
         try {
-            Mpa m = jdbc.queryForObject(query, mpaRowMapper, id);
+            Mpa m = jdbc.queryForObject(sql, mpaRowMapper, id);
             return Optional.ofNullable(m);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -35,8 +35,8 @@ public class MpaDbStorage implements MpaStorage {
         if (ids == null || ids.isEmpty()) return result;
 
         String in = String.join(",", Collections.nCopies(ids.size(), "?"));
-        String query = "SELECT * FROM mpa_ratings WHERE id IN (" + in + ")";
-        List<Mpa> list = jdbc.query(query, ids.toArray(), mpaRowMapper);
+        String sql = "SELECT * FROM mpa_ratings WHERE id IN (" + in + ")";
+        List<Mpa> list = jdbc.query(sql, ids.toArray(), mpaRowMapper);
         for (Mpa mpa : list) {
             result.put(mpa.getId(), mpa);
         }

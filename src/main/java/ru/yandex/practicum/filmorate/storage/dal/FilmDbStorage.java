@@ -29,15 +29,15 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Collection<Film> findPopularFilms(long count) {
-        String query = "SELECT f.* FROM films AS f LEFT JOIN film_likes AS fl ON f.id = fl.film_id GROUP BY f.id ORDER BY COUNT(fl.user_id) DESC LIMIT ?";
-        return jdbc.query(query, filmRowMapper, count);
+        String sql = "SELECT f.* FROM films AS f LEFT JOIN film_likes AS fl ON f.id = fl.film_id GROUP BY f.id ORDER BY COUNT(fl.user_id) DESC LIMIT ?";
+        return jdbc.query(sql, filmRowMapper, count);
     }
 
     @Override
     public Optional<Film> getFilmById(long id) {
-        String query = "SELECT * FROM films WHERE id = ?";
+        String sql = "SELECT * FROM films WHERE id = ?";
         try {
-            Film film = jdbc.queryForObject(query, filmRowMapper, id);
+            Film film = jdbc.queryForObject(sql, filmRowMapper, id);
             return Optional.ofNullable(film);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -96,16 +96,6 @@ public class FilmDbStorage implements FilmStorage {
     public void removeLike(long filmId, long userId) {
         String sql = "DELETE FROM film_likes WHERE film_id = ? AND user_id = ?";
         jdbc.update(sql, filmId, userId);
-    }
-
-    private List<Genre> getGenresForFilm(long filmId) {
-        String sql = "SELECT g.id, g.name " + "FROM genres g JOIN film_genres fg ON g.id = fg.genre_id " + "WHERE fg.film_id = ? " + "ORDER BY g.id";
-        return jdbc.query(sql, (rs, rn) -> {
-            Genre g = new Genre();
-            g.setId(rs.getInt("id"));
-            g.setName(rs.getString("name"));
-            return g;
-        }, filmId);
     }
 
     public void saveGenresForFilm(long filmId, List<Genre> genres) {

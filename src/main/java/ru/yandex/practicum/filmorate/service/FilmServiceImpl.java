@@ -96,10 +96,8 @@ public class FilmServiceImpl implements FilmService {
     private void enrichFilms(Collection<Film> films) {
         if (films == null || films.isEmpty()) return;
 
-        // ids фильмов
         List<Long> filmIds = films.stream().map(Film::getId).collect(Collectors.toList());
 
-        // mpa ids
         Set<Integer> mpaIds = new HashSet<>();
         for (Film f : films) {
             if (f.getMpa() != null) {
@@ -133,7 +131,6 @@ public class FilmServiceImpl implements FilmService {
 
     private void validateGenresExist(Collection<Genre> genres) {
         if (genres == null || genres.isEmpty()) return;
-        // простая проверка поштучно, без «стримов»
         for (Genre g : new HashSet<>(genres)) {
             genreStorage.findById(g.getId())
                     .orElseThrow(() -> new NotFoundException("Жанр не найден: " + g.getId()));
