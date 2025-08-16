@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.storage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -63,6 +64,11 @@ public class InMemoryFilmStorage implements FilmStorage {
     public void removeLike(long filmId, long userId) {
         log.info("Пользователь с id={} убрал лайк", userId);
         likes.get(filmId).remove(userId);
+    }
+
+    @Override
+    public void saveGenresForFilm(long filmId, List<Genre> genres) {
+
     }
 
     private long getNextId() {

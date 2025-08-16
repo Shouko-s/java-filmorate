@@ -30,21 +30,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
+        postProcessName(user);
         return userStorage.createUser(user);
     }
 
     @Override
     public User updateUser(User user) {
         getUserByIdOrThrow(user.getId());
+        postProcessName(user);
         return userStorage.updateUser(user);
     }
 
     @Override
     public Set<Long> addFriend(long id, long friendId) {
         getUserByIdOrThrow(id);
-        getUserByIdOrThrow(friendId);
+        User friend = getUserByIdOrThrow(friendId);
         Set<User> current = userStorage.findMyFriends(id);
-        if (current.contains(getUserByIdOrThrow(id))) {
+        if (current.contains(friend)) {
             throw new AlreadyFriendException("Пользователь с id=" + friendId + " уже в друзьях");
         }
         return userStorage.addFriend(id, friendId);
@@ -73,5 +75,11 @@ public class UserServiceImpl implements UserService {
     private User getUserByIdOrThrow(long id) {
         return userStorage.getUserById(id)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id=" + id + " не найден"));
+    }
+
+    private void postProcessName(User user) {
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
     }
 }

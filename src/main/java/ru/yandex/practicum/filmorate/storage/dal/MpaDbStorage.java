@@ -7,12 +7,11 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.dal.mappers.MpaRowMapper;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 @AllArgsConstructor
-public class MpaDbStorage {
+public class MpaDbStorage implements MpaStorage {
     private final JdbcTemplate jdbc;
     private final MpaRowMapper mpaRowMapper;
 
@@ -22,12 +21,25 @@ public class MpaDbStorage {
     }
 
     public Optional<Mpa> findById(int id) {
-        String sql = "SELECT id, name FROM mpa_ratings WHERE id = ?";
+        String query = "SELECT id, name FROM mpa_ratings WHERE id = ?";
         try {
-            Mpa m = jdbc.queryForObject(sql, mpaRowMapper, id);
+            Mpa m = jdbc.queryForObject(query, mpaRowMapper, id);
             return Optional.ofNullable(m);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public Map<Integer, Mpa> findByIds(Collection<Integer> ids) {
+        Map<Integer, Mpa> result = new HashMap<>();
+        if (ids == null || ids.isEmpty()) return result;
+
+        String in = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String query = "SELECT * FROM mpa_ratings WHERE id IN (" + in + ")";
+        List<Mpa> list = jdbc.query(query, ids.toArray(), mpaRowMapper);
+        for (Mpa mpa : list) {
+            result.put(mpa.getId(), mpa);
+        }
+        return result;
     }
 }
