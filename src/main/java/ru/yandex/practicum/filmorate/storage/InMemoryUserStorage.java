@@ -26,7 +26,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User createUser(User user) {
-        postProcessName(user);
         user.setId(getNextId());
         users.put(user.getId(), user);
         friends.put(user.getId(), new HashSet<>());
@@ -71,13 +70,6 @@ public class InMemoryUserStorage implements UserStorage {
                 .filter(otherFriends::contains)   // оставляем только тех, кто есть во втором множестве
                 .map(users::get)                   // достаём объект User по ID
                 .collect(Collectors.toSet());
-    }
-
-    private void postProcessName(User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-            log.info("Имя не передано, вместо имени установлен логин");
-        }
     }
 
     private long getNextId() {
